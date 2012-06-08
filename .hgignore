@@ -1,0 +1,11 @@
+syntax: glob
+*~
+*.pyc
+*.swp
+\#*\#
+
+MANIFEST
+
+syntax: regexp
+^dist/
+^django_randomfilenamestorage.egg-info/
