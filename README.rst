@@ -12,9 +12,9 @@ it will rename it as ``hello_.txt``.
 try to create ``hello.txt`` with the content ``Hello world!``, it will
 save it as ``d3486ae9136e7856bc42212385ea797094475802.txt``. Directory
 names and extensions are preserved, only the root filename is
-changed. This means that there will one copy of this file will be
-stored in the underlying backend, as long as no matter how many times
-``hello.txt`` is uploaded.
+changed. This reduces the number of duplicates stored in the
+underlying backend, and implies that these files can be served from a
+static cache that never expires.
 
 Installing
 ----------
