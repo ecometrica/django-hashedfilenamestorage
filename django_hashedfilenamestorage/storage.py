@@ -53,7 +53,7 @@ def HashedFilenameMetaStorage(storage_class):
             finally:
                 content.seek(cursor)
 
-        def save(self, name, content):
+        def save(self, name, content, max_length=None):
             # Get the proper name for the file, as it will actually be saved.
             if name is None:
                 name = content.name
