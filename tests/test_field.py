@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import tempfile
 from unittest import TestCase
 
+import six
 import os
 import shutil
 from django.conf import settings
@@ -23,11 +24,11 @@ class FileFieldTestCase(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(settings.MEDIA_ROOT)
+        shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
     def test_generic(self):
         field = FileField(name='test', upload_to=self.upload_to)
-        fake_model = type(b'fake', (object,), {field.name: None})
+        fake_model = type(str('fake'), (object,), {field.name: None})
         _file = FieldFile(field=field, instance=fake_model(), name='')
         _file._committed = False
         with open(self.archive, 'rb') as f:

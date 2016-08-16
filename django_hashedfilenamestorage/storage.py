@@ -4,7 +4,13 @@ import os
 
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
+
+try:
+    from django.utils.encoding import force_bytes
+except ImportError:
+        from django.utils.encoding import smart_str as force_bytes
+
 
 
 class NoAvailableName(Exception):
@@ -48,7 +54,7 @@ def HashedFilenameMetaStorage(storage_class):
                     data = content.read(chunk_size)
                     if not data:
                         break
-                    hasher.update(data)
+                    hasher.update(force_bytes(data))
                 return hasher.hexdigest()
             finally:
                 content.seek(cursor)
@@ -62,7 +68,7 @@ def HashedFilenameMetaStorage(storage_class):
             name = self._save(name, content)
 
             # Store filenames with forward slashes, even on Windows
-            return force_unicode(name.replace('\\', '/'))
+            return force_text(name.replace('\\', '/'))
 
         def _save(self, name, content, *args, **kwargs):
             new_name = self._get_content_name(name=name, content=content)
@@ -75,7 +81,7 @@ def HashedFilenameMetaStorage(storage_class):
                 # File already exists, so we can safely do nothing
                 # because their contents match.
                 pass
-            except OSError, e:
+            except OSError as e:
                 if e.errno == EEXIST:
                     # We have a safe storage layer and file exists.
                     pass
