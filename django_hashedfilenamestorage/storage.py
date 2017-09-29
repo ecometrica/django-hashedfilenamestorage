@@ -8,6 +8,10 @@ from django.utils.encoding import force_unicode
 import uuid
 
 
+class NoAvailableName(Exception):
+    pass
+
+
 def HashedFilenameMetaStorage(storage_class):
     class HashedFilenameStorage(storage_class):
         def __init__(self, *args, **kwargs):
