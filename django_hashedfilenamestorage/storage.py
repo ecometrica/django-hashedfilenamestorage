@@ -5,6 +5,7 @@ import os
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import force_unicode
+import uuid
 
 
 class NoAvailableName(Exception):
@@ -24,7 +25,10 @@ def HashedFilenameMetaStorage(storage_class):
                 super(HashedFilenameStorage, self).__init__(*args, **kwargs)
 
         def get_available_name(self, name):
-            raise NoAvailableName()
+            dir_name, file_name = os.path.split(name)
+            file_ext = os.path.splitext(file_name)[1]
+
+            return os.path.join(dir_name, '%s.%s' % (uuid.uuid4(), file_ext))
 
         def _get_content_name(self, name, content, chunk_size=None):
             dir_name, file_name = os.path.split(name)
@@ -53,7 +57,7 @@ def HashedFilenameMetaStorage(storage_class):
             finally:
                 content.seek(cursor)
 
-        def save(self, name, content):
+        def save(self, name, content, max_length=None):
             # Get the proper name for the file, as it will actually be saved.
             if name is None:
                 name = content.name
