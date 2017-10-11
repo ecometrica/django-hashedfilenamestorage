@@ -6,6 +6,7 @@ syntax: glob
 .cache/
 .idea/
 .tox/
+tests/media/
 
 
 MANIFEST
