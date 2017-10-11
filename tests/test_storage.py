@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from contextlib import contextmanager
 
 import os
@@ -42,7 +44,7 @@ def stub_random_string(*args, **kwargs):
 
 
 class HashedFilenameTestCase(TestCase):
-    CONTENT = 'Hello world!'
+    CONTENT = b'Hello world!'
     SHA1SUM = 'd3486ae9136e7856bc42212385ea797094475802'
 
     def test_init(self):
@@ -130,7 +132,7 @@ def patch(namespace, **values):
         if namespace._wrapped is None:
             namespace._setup()
         namespace = namespace._wrapped
-    for (name, value) in values.iteritems():
+    for (name, value) in values.items():
         try:
             originals[name] = getattr(namespace, name)
         except AttributeError:
@@ -143,7 +145,7 @@ def patch(namespace, **values):
     try:
         yield
     finally:
-        for (name, original_value) in originals.iteritems():
+        for (name, original_value) in originals.items():
             if original_value is NotImplemented:
                 if values[name] is not NotImplemented:
                     delattr(namespace, name)

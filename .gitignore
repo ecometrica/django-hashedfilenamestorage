@@ -3,9 +3,16 @@ syntax: glob
 *.pyc
 *.swp
 \#*\#
+.cache/
+.idea/
+.tox/
+tests/media/
+
 
 MANIFEST
 
 syntax: regexp
 ^dist/
 ^django_randomfilenamestorage.egg-info/
+
+
