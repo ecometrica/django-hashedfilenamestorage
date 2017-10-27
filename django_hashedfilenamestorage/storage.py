@@ -70,6 +70,13 @@ def HashedFilenameMetaStorage(storage_class):
 
         def _save(self, name, content, *args, **kwargs):
             new_name = self._get_content_name(name=name, content=content)
+
+            try:
+                if self.exists(new_name):
+                    return new_name
+            except Exception as e:
+                print "not support exists check"
+
             try:
                 return super(HashedFilenameStorage, self)._save(new_name,
                                                                 content,
