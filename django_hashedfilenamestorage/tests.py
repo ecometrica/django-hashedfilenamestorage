@@ -110,16 +110,16 @@ class HashedFilenameTestCase(TestCase):
             name1 = storage.save('foo/bar.txt', ContentFile(self.CONTENT))
             self.assertEqual(name1,
                              'foo/%s.txt' % self.SHA1SUM)
-            self.assertEqual(storage.open(name1).read(), self.CONTENT)
+            self.assertEqual(storage.open(name1, 'rt').read(), self.CONTENT)
 
             storage.delete(name1)
             name2 = storage.save('foo/bar.txt', ContentFile(self.CONTENT))
             self.assertEqual(name2, name1)
-            self.assertEqual(storage.open(name2).read(), self.CONTENT)
+            self.assertEqual(storage.open(name2, 'rt').read(), self.CONTENT)
 
             name3 = storage.save('foo/another.txt', ContentFile(self.CONTENT))
             self.assertEqual(name3, name1)
-            self.assertEqual(storage.open(name3).read(), self.CONTENT)
+            self.assertEqual(storage.open(name3, 'rt').read(), self.CONTENT)
 
 
 @contextmanager
@@ -130,7 +130,7 @@ def patch(namespace, **values):
         if namespace._wrapped is None:
             namespace._setup()
         namespace = namespace._wrapped
-    for (name, value) in values.iteritems():
+    for (name, value) in list(values.items()):
         try:
             originals[name] = getattr(namespace, name)
         except AttributeError:
@@ -143,7 +143,7 @@ def patch(namespace, **values):
     try:
         yield
     finally:
-        for (name, original_value) in originals.iteritems():
+        for (name, original_value) in originals.items():
             if original_value is NotImplemented:
                 if values[name] is not NotImplemented:
                     delattr(namespace, name)
