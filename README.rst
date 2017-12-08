@@ -1,12 +1,15 @@
+https://travis-ci.org/ecometrica/django-hashedfilenamestorage.svg?branch=master
+
 ``django-hashedfilenamestorage``
 ================================
 
 A Django storage backend that names files by hash value.
 
 By default, ``django.core.files.storage.FileSystemStorage`` deals with
-conflicting filenames by appending an underscore to the file. For
+conflicting filenames by appending an underscore and a random 7
+character alphanumeric string to the file. For
 instance, if you try to create ``hello.txt`` when it already exists,
-it will rename it as ``hello_.txt``.
+it will rename it as e.g. ``hello_a12mkj3.txt``.
 
 ``django-hashedfilenamestorage`` creates hashed filenames, so if you
 try to create ``hello.txt`` with the content ``Hello world!``, it will
