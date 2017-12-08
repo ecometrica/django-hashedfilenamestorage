@@ -1,0 +1,9 @@
+*.pyc
+*.swp
+
+MANIFEST
+
+.cache/
+.tox/
+dist/
+django_hashedfilenamestorage.egg-info/*

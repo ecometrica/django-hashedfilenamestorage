@@ -130,7 +130,7 @@ def patch(namespace, **values):
         if namespace._wrapped is None:
             namespace._setup()
         namespace = namespace._wrapped
-    for (name, value) in list(values.items()):
+    for (name, value) in values.items():
         try:
             originals[name] = getattr(namespace, name)
         except AttributeError:
