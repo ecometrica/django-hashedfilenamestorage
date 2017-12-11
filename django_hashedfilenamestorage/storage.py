@@ -53,7 +53,7 @@ def HashedFilenameMetaStorage(storage_class):
             finally:
                 content.seek(cursor)
 
-        def save(self, name, content):
+        def save(self, name, content, max_length=None):
             # Get the proper name for the file, as it will actually be saved.
             if name is None:
                 name = content.name
@@ -65,9 +65,8 @@ def HashedFilenameMetaStorage(storage_class):
             return force_text(name.replace('\\', '/'))
 
         def _save(self, name, content, *args, **kwargs):
-            new_name = self._get_content_name(name=name, content=content)
             try:
-                return super(HashedFilenameStorage, self)._save(new_name,
+                return super(HashedFilenameStorage, self)._save(name,
                                                                 content,
                                                                 *args,
                                                                 **kwargs)
@@ -81,7 +80,7 @@ def HashedFilenameMetaStorage(storage_class):
                     pass
                 else:
                     raise
-            return new_name
+            return name
 
     HashedFilenameStorage.__name__ = 'HashedFilename' + storage_class.__name__
     return HashedFilenameStorage
