@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='django-hashedfilenamestorage',
-    version='1.0',
+    version='2.0',
     description=('A Django storage backend that names files by hash value.'),
     long_description=open('README.rst', 'r').read(),
     author='Ecometrica',
