@@ -3,14 +3,14 @@ from distutils.core import setup
 
 setup(
     name='livingbio-django-hashedfilenamestorage',
-    version='2.0',
+    version='2.1',
     description=('A Django storage backend that names files by hash value.'),
     long_description=open('README.rst', 'r').read(),
     author='Ecometrica',
     author_email='info@ecometrica.com',
     url='http://github.com/ecometrica/django-hashedfilenamestorage/',
     packages=['django_hashedfilenamestorage'],
-    install_requires=['Django>=1.3'],
+    install_requires=['Django>=1.3', 'livingbio-workspace'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
