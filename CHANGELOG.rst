@@ -2,6 +2,11 @@
 Release Notes
 =============
 
+2.0.1
+-----
+* Specify django <2.0 in setup.py
+
+
 2.0
 -----
 

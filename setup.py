@@ -3,14 +3,14 @@ from setuptools import setup
 
 setup(
     name='django-hashedfilenamestorage',
-    version='2.0',
+    version='2.0.1',
     description=('A Django storage backend that names files by hash value.'),
     long_description=open('README.rst', 'r').read(),
     author='Ecometrica',
     author_email='info@ecometrica.com',
     url='http://github.com/ecometrica/django-hashedfilenamestorage/',
     packages=['django_hashedfilenamestorage'],
-    install_requires=['Django>=1.8'],
+    install_requires=['Django>=1.8,<2.0'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
