@@ -43,6 +43,7 @@ def stub_random_string(*args, **kwargs):
 
 class HashedFilenameTestCase(TestCase):
     CONTENT = 'Hello world!'
+    BCONTENT = b'Hello world!'
     SHA1SUM = 'd3486ae9136e7856bc42212385ea797094475802'
 
     def test_init(self):
@@ -91,6 +92,41 @@ class HashedFilenameTestCase(TestCase):
                 'foo/%s.txt' % self.SHA1SUM
             )
 
+    def test_get_bytes_content_name(self):
+        with media_root():
+            storage = HashedFilenameFileSystemStorage()
+            self.assertEqual(
+                storage._get_content_name(name='',
+                                          content=ContentFile(self.BCONTENT)),
+                '%s' % self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._get_content_name(name='',
+                                          content=ContentFile(self.BCONTENT),
+                                          chunk_size=1),
+                '%s' % self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._get_content_name(name='foo',
+                                          content=ContentFile(self.BCONTENT)),
+                '%s' % self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._get_content_name(name='foo.txt',
+                                          content=ContentFile(self.BCONTENT)),
+                '%s.txt' % self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._get_content_name(name='foo/bar',
+                                          content=ContentFile(self.BCONTENT)),
+                'foo/%s' % self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._get_content_name(name='foo/bar.txt',
+                                          content=ContentFile(self.BCONTENT)),
+                'foo/%s.txt' % self.SHA1SUM
+            )
+
     def test_compute_hash(self):
         with media_root():
             storage = HashedFilenameFileSystemStorage()
@@ -103,13 +139,21 @@ class HashedFilenameTestCase(TestCase):
                                       chunk_size=1),
                 self.SHA1SUM
             )
+            self.assertEqual(
+                storage._compute_hash(content=ContentFile(self.BCONTENT)),
+                self.SHA1SUM
+            )
+            self.assertEqual(
+                storage._compute_hash(content=ContentFile(self.BCONTENT),
+                                      chunk_size=1),
+                self.SHA1SUM
+            )
 
     def test_save(self):
         with media_root():
             storage = HashedFilenameFileSystemStorage()
             name1 = storage.save('foo/bar.txt', ContentFile(self.CONTENT))
-            self.assertEqual(name1,
-                             'foo/%s.txt' % self.SHA1SUM)
+            self.assertEqual(name1, 'foo/%s.txt' % self.SHA1SUM)
             self.assertEqual(storage.open(name1, 'rt').read(), self.CONTENT)
 
             storage.delete(name1)
@@ -120,6 +164,22 @@ class HashedFilenameTestCase(TestCase):
             name3 = storage.save('foo/another.txt', ContentFile(self.CONTENT))
             self.assertEqual(name3, name1)
             self.assertEqual(storage.open(name3, 'rt').read(), self.CONTENT)
+
+    def test_save_bytes_content(self):
+        with media_root():
+            storage = HashedFilenameFileSystemStorage()
+            name1 = storage.save('foo/bar.txt', ContentFile(self.BCONTENT))
+            self.assertEqual(name1, 'foo/%s.txt' % self.SHA1SUM)
+            self.assertEqual(storage.open(name1, 'rb').read(), self.BCONTENT)
+
+            storage.delete(name1)
+            name2 = storage.save('foo/bar.txt', ContentFile(self.BCONTENT))
+            self.assertEqual(name2, name1)
+            self.assertEqual(storage.open(name2, 'rb').read(), self.BCONTENT)
+
+            name3 = storage.save('foo/another.txt', ContentFile(self.BCONTENT))
+            self.assertEqual(name3, name1)
+            self.assertEqual(storage.open(name3, 'rb').read(), self.BCONTENT)
 
 
 @contextmanager
