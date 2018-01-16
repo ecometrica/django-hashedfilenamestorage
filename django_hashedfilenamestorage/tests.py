@@ -21,7 +21,6 @@ from django.utils.functional import LazyObject
 
 from django_hashedfilenamestorage.storage import (
     HashedFilenameMetaStorage, HashedFilenameFileSystemStorage,
-    NoAvailableName
 )
 
 
@@ -55,7 +54,7 @@ class HashedFilenameTestCase(TestCase):
     def test_get_available_name(self):
         with media_root():
             storage = HashedFilenameFileSystemStorage()
-            self.assertRaises(NoAvailableName, storage.get_available_name, '')
+            self.assertEqual(storage.get_available_name('foo.txt'), 'foo.txt')
 
     def test_get_content_name(self):
         with media_root():
@@ -149,10 +148,32 @@ class HashedFilenameTestCase(TestCase):
                 self.SHA1SUM
             )
 
+    def test_get_available_name_overridden_on_save(self):
+        with media_root():
+            storage = HashedFilenameFileSystemStorage()
+            # get_available_name returns the filename given, but is overridden
+            # on save
+            self.assertEqual(
+                storage.get_available_name('foo/bar.txt'), 'foo/bar.txt'
+            )
+            name1 = storage.save('foo/bar.txt', ContentFile(self.CONTENT))
+            self.assertEqual(name1, 'foo/%s.txt' % self.SHA1SUM)
+            self.assertEqual(storage.open(name1, 'rt').read(), self.CONTENT)
+
+            self.assertTrue(
+                os.path.exists(
+                    os.path.join(settings.MEDIA_ROOT, 'foo/%s.txt' % self.SHA1SUM)
+                )
+            )
+            self.assertFalse(
+                os.path.exists(os.path.join(settings.MEDIA_ROOT, 'foo/bar.txt'))
+            )
+
     def test_save(self):
         with media_root():
             storage = HashedFilenameFileSystemStorage()
             name1 = storage.save('foo/bar.txt', ContentFile(self.CONTENT))
+
             self.assertEqual(name1, 'foo/%s.txt' % self.SHA1SUM)
             self.assertEqual(storage.open(name1, 'rt').read(), self.CONTENT)
 

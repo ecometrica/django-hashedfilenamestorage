@@ -7,10 +7,6 @@ from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import force_text
 
 
-class NoAvailableName(Exception):
-    pass
-
-
 def HashedFilenameMetaStorage(storage_class):
     class HashedFilenameStorage(storage_class):
         def __init__(self, *args, **kwargs):
@@ -22,9 +18,6 @@ def HashedFilenameMetaStorage(storage_class):
                                                             **new_kwargs)
             except TypeError:
                 super(HashedFilenameStorage, self).__init__(*args, **kwargs)
-
-        def get_available_name(self, name):
-            raise NoAvailableName()
 
         def _get_content_name(self, name, content, chunk_size=None):
             dir_name, file_name = os.path.split(name)
@@ -67,15 +60,16 @@ def HashedFilenameMetaStorage(storage_class):
             return force_text(name.replace('\\', '/'))
 
         def _save(self, name, content, *args, **kwargs):
-            try:
-                return super(HashedFilenameStorage, self)._save(name,
-                                                                content,
-                                                                *args,
-                                                                **kwargs)
-            except NoAvailableName:
+            new_name = self._get_content_name(name=name, content=content)
+            if self.exists(new_name):
                 # File already exists, so we can safely do nothing
                 # because their contents match.
-                pass
+                return new_name
+
+            try:
+                return super(HashedFilenameStorage, self)._save(
+                    name, content, *args, **kwargs
+                )
             except OSError as e:
                 if e.errno == EEXIST:
                     # We have a safe storage layer and file exists.

@@ -2,6 +2,12 @@
 Release Notes
 =============
 
+2.2
+-----
+* get_available_filename() now returns the default filename instead of raising
+an exception, for compatibility with other packages (overridden by the hashed
+filename on save)
+
 2.1
 -----
 * Fix bug for bytes content
