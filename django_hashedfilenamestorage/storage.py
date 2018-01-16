@@ -48,7 +48,9 @@ def HashedFilenameMetaStorage(storage_class):
                     data = content.read(chunk_size)
                     if not data:
                         break
-                    hasher.update(data.encode('utf-8'))
+                    if not isinstance(data, bytes):
+                        data = data.encode('utf-8')
+                    hasher.update(data)
                 return hasher.hexdigest()
             finally:
                 content.seek(cursor)

@@ -2,6 +2,11 @@
 Release Notes
 =============
 
+2.1
+-----
+* Fix bug for bytes content
+* Update setup.py and tox to support Django 2.0 for python version >= 3.4
+
 2.0.1
 -----
 * Specify django <2.0 in setup.py
