@@ -21,7 +21,7 @@ def HashedFilenameMetaStorage(storage_class):
 
         def _get_content_name(self, name, content, chunk_size=None):
             dir_name, file_name = os.path.split(name)
-            file_ext = os.path.splitext(file_name)[1]
+            file_ext = os.path.splitext(file_name)[1].lower()
             file_root = self._compute_hash(content=content,
                                            chunk_size=chunk_size)
             # file_ext includes the dot.
