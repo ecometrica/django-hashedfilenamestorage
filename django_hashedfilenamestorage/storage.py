@@ -4,13 +4,9 @@ import os
 
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from workspace import _local
 import uuid
-
-
-class NoAvailableName(Exception):
-    pass
 
 
 def HashedFilenameMetaStorage(storage_class):
@@ -24,12 +20,6 @@ def HashedFilenameMetaStorage(storage_class):
                                                             **new_kwargs)
             except TypeError:
                 super(HashedFilenameStorage, self).__init__(*args, **kwargs)
-
-        def get_available_name(self, name):
-            dir_name, file_name = os.path.split(name)
-            file_ext = os.path.splitext(file_name)[1]
-
-            return os.path.join(dir_name, '%s.%s' % (uuid.uuid4(), file_ext))
 
         def _get_content_name(self, name, content, chunk_size=None):
             dir_name, file_name = os.path.split(name)
@@ -53,6 +43,8 @@ def HashedFilenameMetaStorage(storage_class):
                     data = content.read(chunk_size)
                     if not data:
                         break
+                    if not isinstance(data, bytes):
+                        data = data.encode('utf-8')
                     hasher.update(data)
                 return hasher.hexdigest()
             finally:
@@ -70,33 +62,26 @@ def HashedFilenameMetaStorage(storage_class):
             name = self._save(name, content)
 
             # Store filenames with forward slashes, even on Windows
-            return force_unicode(name.replace('\\', '/'))
+            return force_text(name.replace('\\', '/'))
 
         def _save(self, name, content, *args, **kwargs):
             new_name = self._get_content_name(name=name, content=content)
-
-            try:
-                if self.exists(new_name):
-                    return new_name
-            except Exception as e:
-                print "not support exists check"
-
-            try:
-                return super(HashedFilenameStorage, self)._save(new_name,
-                                                                content,
-                                                                *args,
-                                                                **kwargs)
-            except NoAvailableName:
+            if self.exists(new_name):
                 # File already exists, so we can safely do nothing
                 # because their contents match.
-                pass
-            except OSError, e:
+                return new_name
+
+            try:
+                return super(HashedFilenameStorage, self)._save(
+                    name, content, *args, **kwargs
+                )
+            except OSError as e:
                 if e.errno == EEXIST:
                     # We have a safe storage layer and file exists.
                     pass
                 else:
                     raise
-            return new_name
+            return name
 
     HashedFilenameStorage.__name__ = 'HashedFilename' + storage_class.__name__
     return HashedFilenameStorage
