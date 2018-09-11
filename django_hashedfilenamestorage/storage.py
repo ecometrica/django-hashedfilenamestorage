@@ -53,18 +53,17 @@ def HashedFilenameMetaStorage(storage_class):
             if name is None:
                 name = content.name
 
-            name = self._get_content_name(name, content)
             name = self._save(name, content)
 
             # Store filenames with forward slashes, even on Windows
             return force_text(name.replace('\\', '/'))
 
         def _save(self, name, content, *args, **kwargs):
-            new_name = self._get_content_name(name=name, content=content)
-            if self.exists(new_name):
+            name = self._get_content_name(name=name, content=content)
+            if self.exists(name):
                 # File already exists, so we can safely do nothing
                 # because their contents match.
-                return new_name
+                return name
 
             try:
                 return super(HashedFilenameStorage, self)._save(
