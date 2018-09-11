@@ -2,6 +2,14 @@
 Release Notes
 =============
 
+2.3
+-----
+
+* Support Django 2.1+
+* Remove duplicate hash calculation
+* Always lower filename extensions
+
+
 2.2
 -----
 * get_available_filename() now returns the default filename instead of raising
