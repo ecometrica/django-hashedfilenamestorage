@@ -5,6 +5,8 @@ import os
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import force_text
+from workspace import _local
+import uuid
 
 
 def HashedFilenameMetaStorage(storage_class):
@@ -47,6 +49,9 @@ def HashedFilenameMetaStorage(storage_class):
                 return hasher.hexdigest()
             finally:
                 content.seek(cursor)
+
+        def path(self, name):
+            return _local(name, self.url(name))
 
         def save(self, name, content, max_length=None):
             # Get the proper name for the file, as it will actually be saved.
