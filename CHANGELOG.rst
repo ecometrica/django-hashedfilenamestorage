@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+2.4
+-----
+* Bump Django dependency requirement to avoid vulnerable Django versions
+
 2.3
 -----
 
