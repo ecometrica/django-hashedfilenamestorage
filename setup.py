@@ -7,12 +7,12 @@ from setuptools import setup
 if sys.version_info < (3, 4):
     install_requires = ['Django>=1.8,<2.0']
 else:
-    install_requires = ['Django>=1.8']
+    install_requires = ['Django>=1.8,!=2.0,!=2.0.1,!=2.0.2,!=2.0.3,!=2.0.4,!=2.0.5,!=2.0.6,!=2.0.7']
 
 
 setup(
     name='django-hashedfilenamestorage',
-    version='2.3',
+    version='2.3.1',
     description=('A Django storage backend that names files by hash value.'),
     long_description=open('README.rst', 'r').read(),
     author='Ecometrica',
