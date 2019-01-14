@@ -12,7 +12,7 @@ else:
 
 setup(
     name='django-hashedfilenamestorage',
-    version='2.4',
+    version='2.4.1',
     description=('A Django storage backend that names files by hash value.'),
     long_description=open('README.rst', 'r').read(),
     author='Ecometrica',

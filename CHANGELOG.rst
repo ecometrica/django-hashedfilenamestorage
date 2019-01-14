@@ -2,6 +2,10 @@
 Release Notes
 =============
 
+2.4.1
+-----
+* Bump Django dependency requirement again
+
 2.4
 -----
 * Bump Django dependency requirement to avoid vulnerable Django versions
