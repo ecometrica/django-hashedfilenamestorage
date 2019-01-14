@@ -7,7 +7,7 @@ from setuptools import setup
 if sys.version_info < (3, 4):
     install_requires = ['Django>=1.8,<2.0']
 else:
-    install_requires = ['Django>=1.8,!=2.0,!=2.0.1,!=2.0.2,!=2.0.3,!=2.0.4,!=2.0.5,!=2.0.6,!=2.0.7']
+    install_requires = ['Django>=1.8,!=2.0,!=2.0.1,!=2.0.2,!=2.0.3,!=2.0.4,!=2.0.5,!=2.0.6,!=2.0.7,!=2.0.8,!=2.0.9']
 
 
 setup(
