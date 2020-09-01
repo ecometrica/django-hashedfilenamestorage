@@ -5,6 +5,7 @@ import os
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import force_text
+from django.core.exceptions import ImproperlyConfigured
 
 
 def HashedFilenameMetaStorage(storage_class):
@@ -16,7 +17,7 @@ def HashedFilenameMetaStorage(storage_class):
                 new_kwargs = dict(kwargs, uniquify_names=False)
                 super(HashedFilenameStorage, self).__init__(*args,
                                                             **new_kwargs)
-            except TypeError:
+            except (TypeError, ImproperlyConfigured):
                 super(HashedFilenameStorage, self).__init__(*args, **kwargs)
 
         def _get_content_name(self, name, content, chunk_size=None):
