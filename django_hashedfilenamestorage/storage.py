@@ -4,8 +4,10 @@ import os
 
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from django.utils.encoding import force_text
 from django.core.exceptions import ImproperlyConfigured
+
+encoding = importlib.import_module('django.utils.encoding')
+globals().setdefault('force_text', getattr(encoding, 'force_str', 'force_text'))
 
 
 def HashedFilenameMetaStorage(storage_class):
